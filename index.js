@@ -36,7 +36,6 @@ async function main() {
       body.style.backgroundColor = '#eeeeee';
       break;
   }
-
   if (!liff.isInClient()) {
     btnLogIn.style.display = 'block';
     btnLogOut.style.display = 'block';
@@ -57,18 +56,21 @@ async function main() {
       btnLogIn.style.display = 'none';
       btnLogOut.style.display = 'block';
       btnShare.style.display = 'block';
+
       getUserProfile();
     } else {
       btnLogIn.style.display = 'block';
       btnLogOut.style.display = 'none';
     }
   } else {
-    btnSend.style.display = 'block';
     btnShare.style.display = 'block';
+    btnSend.style.display = 'block';
     getUserProfile();
   }
 
-  getUserProfile();
+  if (liff.isInClient() && liff.getOS() === 'android') {
+    btnScanCode.style.display = 'block';
+  }
 }
 
 async function getUserProfile() {
@@ -105,6 +107,11 @@ async function shareMsg() {
   ]);
 }
 
+async function scanCode() {
+  const result = await liff.scanCode();
+  code.innerHTML = '<b>Code: </b>' + result.value;
+}
+
 btnLogIn.onclick = () => {
   liff.login();
 };
@@ -122,4 +129,7 @@ btnSend.onclick = () => {
   sendMsg();
 };
 
+btnScanCode.onclick = () => {
+  scanCode();
+};
 main();
