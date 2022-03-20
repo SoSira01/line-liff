@@ -56,12 +56,15 @@ async function main() {
     if (liff.isLoggedIn()) {
       btnLogIn.style.display = 'none';
       btnLogOut.style.display = 'block';
+      btnShare.style.display = 'block';
       getUserProfile();
     } else {
       btnLogIn.style.display = 'block';
       btnLogOut.style.display = 'none';
     }
   } else {
+    btnSend.style.display = 'block';
+    btnShare.style.display = 'block';
     getUserProfile();
   }
 
@@ -77,7 +80,30 @@ async function getUserProfile() {
   email.innerHTML = '<b>email:</b> ' + liff.getDecodedIDToken().email;
 }
 
-main();
+async function sendMsg() {
+  if (
+    liff.getContext().type !== 'none' &&
+    liff.getContext().type !== 'external'
+  ) {
+    await liff.sendMessages([
+      {
+        type: 'text',
+        text: 'This message was sent by sendMessages()',
+      },
+    ]);
+    alert('Message sent');
+  }
+}
+
+async function shareMsg() {
+  await liff.shareTargetPicker([
+    {
+      type: 'image',
+      originalContentUrl: 'https://d.line-scdn.net/stf/line-lp/2016_en_02.jpg',
+      previewImageUrl: 'https://d.line-scdn.net/stf/line-lp/2016_en_02.jpg',
+    },
+  ]);
+}
 
 btnLogIn.onclick = () => {
   liff.login();
@@ -87,3 +113,13 @@ btnLogOut.onclick = () => {
   liff.logout();
   window.location.reload();
 };
+
+btnShare.onclick = () => {
+  shareMsg();
+};
+
+btnSend.onclick = () => {
+  sendMsg();
+};
+
+main();
