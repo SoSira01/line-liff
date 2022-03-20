@@ -39,6 +39,7 @@ async function main() {
       btnLogOut.style.display = 'block';
       btnShare.style.display = 'block';
       getUserProfile();
+      getFriendship();
     } else {
       btnLogIn.style.display = 'block';
       btnLogOut.style.display = 'none';
@@ -47,6 +48,7 @@ async function main() {
     btnShare.style.display = 'block';
     btnSend.style.display = 'block';
     getUserProfile();
+    getFriendship();
   }
 
   btnOpenWindow.style.display = 'block';
@@ -85,17 +87,24 @@ async function sendMsg() {
 }
 
 async function shareMsg() {
-  await liff.shareTargetPicker([
+  const result = await liff.shareTargetPicker([
     {
       type: 'text',
       text: 'This message was sent by Cat',
     },
+    // {
+    //   type: 'image',
+    //   originalContentUrl: 'https://d.line-scdn.net/stf/line-lp/2016_en_02.jpg',
+    //   previewImageUrl: 'https://d.line-scdn.net/stf/line-lp/2016_en_02.jpg',
+    // },
     {
-      type: 'image',
-      originalContentUrl: 'https://d.line-scdn.net/stf/line-lp/2016_en_02.jpg',
-      previewImageUrl: 'https://d.line-scdn.net/stf/line-lp/2016_en_02.jpg',
+      isMultiple: false,
     },
   ]);
+
+  if (result) {
+    liff.closeWindow();
+  }
 }
 
 async function scanCode() {
@@ -114,8 +123,18 @@ async function sendMsg() {
         text: 'This message was sent by sendMessages()',
       },
     ]);
-    alert('Message sent');
+    liff.closeWindow();
   }
+}
+
+async function getFriendship() {
+  let msg = 'Hooray! You and our chatbot are friend.';
+  const friend = await liff.getFriendship();
+  if (!friend.friendFlag) {
+    msg =
+      '<a href="https://line.me/R/ti/p/@BOT-ID">Follow our chatbot here!</a>';
+  }
+  friendShip.innerHTML = msg;
 }
 
 btnLogIn.onclick = () => {
