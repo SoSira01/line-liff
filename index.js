@@ -36,6 +36,36 @@ async function main() {
       body.style.backgroundColor = '#eeeeee';
       break;
   }
+
+  if (!liff.isInClient()) {
+    btnLogIn.style.display = 'block';
+    btnLogOut.style.display = 'block';
+  }
+
+  if (!liff.isInClient()) {
+    if (liff.isLoggedIn()) {
+      btnLogIn.style.display = 'none';
+      btnLogOut.style.display = 'block';
+    } else {
+      btnLogIn.style.display = 'block';
+      btnLogOut.style.display = 'none';
+    }
+  }
+
+  if (!liff.isInClient()) {
+    if (liff.isLoggedIn()) {
+      btnLogIn.style.display = 'none';
+      btnLogOut.style.display = 'block';
+      getUserProfile();
+    } else {
+      btnLogIn.style.display = 'block';
+      btnLogOut.style.display = 'none';
+    }
+  } else {
+    getUserProfile();
+  }
+
+  getUserProfile();
 }
 
 async function getUserProfile() {
@@ -44,9 +74,16 @@ async function getUserProfile() {
   userId.innerHTML = '<b>userId:</b> ' + profile.userId;
   statusMessage.innerHTML = '<b>statusMessage:</b> ' + profile.statusMessage;
   displayName.innerHTML = '<b>displayName:</b> ' + profile.displayName;
+  email.innerHTML = '<b>email:</b> ' + liff.getDecodedIDToken().email;
 }
-async function main() {
-  // ...
-  getUserProfile();
-}
+
 main();
+
+btnLogIn.onclick = () => {
+  liff.login();
+};
+
+btnLogOut.onclick = () => {
+  liff.logout();
+  window.location.reload();
+};
