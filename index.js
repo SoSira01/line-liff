@@ -26,7 +26,16 @@ const friendShip = document.getElementById('friendShip');
 
 async function main() {
   // Initialize LIFF app)
+  await liff.init({ liffId: '1656989109-G0WqnkEL' });
   // Try a LIFF function
+  switch (liff.getOS()) {
+    case 'android':
+      body.style.backgroundColor = '#d1f5d3';
+      break;
+    case 'ios':
+      body.style.backgroundColor = '#eeeeee';
+      break;
+  }
 }
 
 async function getUserProfile() {
